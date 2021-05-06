@@ -1,0 +1,189 @@
+;This contents file was created with the free trial version of HelpScribble 7.0.1
+;Help files created with the free trial version must not be distributed.
+
+:BASE RPG2003.hlp
+:TITLE RPG Maker 2003
+1 RPG Maker 2003=Scribble100
+1 Overview
+2 Editor=Scribble168
+2 Game=Scribble188
+1 Main Editor
+2 Main Editor Contents=Scribble218
+2 Menu Bar
+3 Menu Bar Contents=Scribble206
+3 Project Menu=Scribble234
+3 Map Menu=Scribble223
+3 Tools Menu=Scribble271
+3 Game Menu=Scribble189
+3 Help Menu=Scribble227
+2 Toolbar
+3 Contents of Toolbar=Scribble164
+2 Miscellaneous Functions
+3 Event Search=Scribble180
+3 BGM Selector=Scribble128
+3 Import and Export Resources=Scribble114
+3 Test Play=Scribble264
+3 Gamedisk=Scribble208
+1 Project
+2 Project Summary=Scribble241
+2 Project Creation=Scribble236
+2 Project Operation=Scribble237
+1 Maps
+2 Map Summary=Scribble112
+2 Tiles=Scribble267
+2 New Map=Scribble195
+2 Map Tree Hierarchy=Scribble277
+2 Save Map=Scribble250
+2 Map Compilation=Scribble226
+2 Areas=Scribble110
+2 Map Properties
+3 Map Properties=Scribble196
+3 Map Compilation Tools=Scribble228
+3 Area Settings=Scribble108
+1 Database
+2 Database Settings=Scribble167
+2 Hero=Scribble2
+2 Class=Scribble1001
+2 Skills=Scribble3
+2 Item=Scribble3
+2 Monster=Scribble5
+2 Monster Groups=Scribble6
+2 Attribute=Scribble7
+2 Condition=Scribble8
+2 Animations=Scribble9
+2 Animations 2=Scribble1002
+2 Battle Layout=Scribble1003
+2 Terrain=Scribble10
+2 Tileset=Scribble11
+2 String=Scribble12
+2 System=Scribble13
+2 System 2=Scribble1007
+2 Common Events=Scribble160
+2 Supplementary Windows
+3 Experience Curve=Scribble17
+3 Base Statistics=Scribble46
+3 Behavior=Scribble127
+3 Test Battle=Scribble263
+3 Frame View=Scribble187
+3 Animation Effect Timing=Scribble106
+3 Mass Copy/Clear=Scribble200
+3 Autocomplete=Scribble109
+3 Mass Modify=Scribble202
+3 Tileset Specifications=Scribble268
+1 Events
+2 Event Summary=Scribble181
+2 Note on Event Settings=Scribble197
+2 Event Commands Window=Scribble178
+2 Switch=Scribble257
+2 Variable Selection=Scribble274
+2 Event Pages and Divergence=Scribble179
+2 Map Events
+3 Creating Map Events=Scribble165
+3 Map Event Shortcut Menu=Scribble235
+3 Map Event Setup=Scribble233
+2 Common Events
+3 Common Event Settings=Scribble14
+2 Battle Events
+3 Battle Event Setup=Scribble124
+2 Event Commands
+3 Moving Events
+4 Custom Event Pattern=Scribble192
+3 Command List
+4 Message=Scribble277
+4 Message Display Options=Scribble12120
+4 Face Graphics=Scribble10130
+4 Show Choices=Scribble10140
+4 Input Number=Scribble10150
+4 Switch Operations=Scribble10210
+4 Variable Operations=Scribble10220
+4 Timer Operations=Scribble10220
+4 Change Money=Scribble10310
+4 Item Management=Scribble10320
+4 Change Party=Scribble10330
+4 Change Experience Points=Scribble10410
+4 Change Character Level=Scribble10420
+4 Change Character Base Statistics=Scribble10430
+4 Change Skills=Scribble10440
+4 Change Equipped Items=Scribble10450
+4 Change Character HP=Scribble10460
+4 Change Character MP=Scribble10470
+4 Change Hero Condition=Scribble10480
+4 Complete Healing=Scribble10490
+4 Simulated Enemy Attack=Scribble10500
+4 Change Hero Name=Scribble10610
+4 Change Hero Title=Scribble10620
+4 Change Sprite Association=Scribble10630
+4 Change Face Association=Scribble10640
+4 Change Vehicle Graphic=Scribble10650
+4 Change System BGM=Scribble10660
+4 Change System Sound Effects=Scribble10670
+4 Change System Graphics=Scribble10680
+4 Change Screen Transitions=Scribble10690
+4 Enemy Encounter=Scribble10710
+4 Open Shop Window=Scribble10720
+4 Show Inn Message=Scribble10730
+4 Enter Hero Name=Scribble10740
+4 Select Teleport Location=Scribble10810
+4 Memorize Position=Scribble10820
+4 Recall to Memorized Position=Scribble10830
+4 Enter Vehicle=Scribble10840
+4 Set Vehicle Position=Scribble10850
+4 Change Event Location=Scribble10860
+4 Trade Two Event Locations=Scribble10870
+4 Store Terrain ID=Scribble10910
+4 Store Event ID=Scribble10920
+4 Hide Screen=Scribble11010
+4 Show Screen=Scribble11020
+4 Tint Screen=Scribble11030
+4 Flash Screen=Scribble11040
+4 Shake Screen=Scribble11050
+4 Pan Screen=Scribble11060
+4 Weather Effects=Scribble11070
+4 Show Picture=Scribble11110
+4 Move Picture=Scribble11120
+4 Erase Picture=Scribble11130
+4 Show Battle Animation=Scribble11210
+4 Hero Sprite Transparency=Scribble11310
+4 Flash Sprite=Scribble11320
+4 Move Event=Scribble11330
+4 Proceed with Movement=Scribble11340
+4 Halt All Movement=Scribble11350
+4 Wait=Scribble11410
+4 Play BGM=Scribble11510
+4 Fade BGM=Scribble11520
+4 Memorize BGM=Scribble11530
+4 Play Memorized BGM=Scribble11540
+4 Play Sound Effect=Scribble11550
+4 Play Movie=Scribble11560
+4 Key Input Processing=Scribble11610
+4 Change Map Tileset=Scribble11710
+4 Change Parallax Background=Scribble11720
+4 Change Encounter Rate=Scribble11740
+4 Tile Substitution=Scribble11750
+4 Teleport Target Management=Scribble11810
+4 Allow/Disallow Teleporting=Scribble11820
+4 Set Escape Target=Scribble11830
+4 Allow/Disallow Escaping=Scribble11840
+4 Open Save Menu=Scribble11910
+4 Allow/Disallow Main Menu=Scribble11960
+4 Conditional Branch=Scribble12010
+4 Label=Scribble12110
+4 Jump to Label=Scribble12120
+4 Loop=Scribble12210
+4 Break out of Loop=Scribble12220
+4 End Event Processing=Scribble12310
+4 Erase Event=Scribble12320
+4 Call Event=Scribble12330
+4 Insert Comment=Scribble12410
+4 Game Over=Scribble12420
+4 Return to Title Screen=Scribble12510
+4 Change Class=Scribble1008
+4 Change Battle Commands=Scribble1009
+1 Specifications
+2 Image Specifications=Scribble113
+2 Tileset Specifications=Scribble268
+2 Standard System Graphic Information=Scribble242
+2 Standard System Graphics 2 Information=Scribble240
+2 Battle Algorithms=Scribble123
+2 Special Symbols Summary=Scribble239
+2 Error Message Troubleshooting=Scribble176
