@@ -1,24 +1,33 @@
 cmake_minimum_required(VERSION 3.15)
 
+set(CMAKE_SYSTEM_NAME Windows)
+SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
+set(CMAKE_RANLIB i686-w64-mingw32-ranlib)
+
 project(MyFirstPlugin VERSION 0.1)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-m32 -O3 -Wall -Wextra -Wpedantic)
+add_compile_options(-O3 -Wall -Wextra -Wpedantic -Wl,--subsystem,windows)
 
 file(GLOB_RECURSE SOURCES
-	*.cc
+	main.cc
 )
+
+add_library(MyFirstPlugin SHARED ${SOURCES})
 
 include_directories(
     ../DynRPG/include
 )
 
-add_library(MyFirstPlugin SHARED ${SOURCES})
-set_target_properties(MyFirstPlugin PROPERTIES
-	ARCHIVE_OUTPUT_DIRECTORY
-		${CMAKE_SOURCE_DIR}
-)
+target_link_libraries(MyFirstPlugin
+	PRIVATE ${CMAKE_SOURCE_DIR}/../DynRPG/lib/libDynRPG.a)
 
+add_custom_command(TARGET MyFirstPlugin POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MyFirstPlugin> ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/MyFirstPlugin.dll
+    COMMENT "Created ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/MyFirstPlugin.dll"
+)

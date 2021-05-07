@@ -1,5 +1,4 @@
-#define AUTO_DLLMAIN
-#include <DynRPG/DynRPG.h>
+#include <DynRPG/DynRPG.hpp>
 
 // Handler called on startup
 bool onStartup(char *pluginName) {
