@@ -6,7 +6,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-O1 -Wl,--subsystem,windows -static -Wl,-static -static-libgcc -static-libstdc++)
+add_compile_options(-m32 -O3 -Wall -Wextra -Wpedantic)
 
 file(GLOB_RECURSE SOURCES
 	src/*.cpp
@@ -21,5 +21,5 @@ set_target_properties(DynRPG PROPERTIES
 target_include_directories(DynRPG
 	PRIVATE
 		src/
-		include/
+		include/DynRPG
 )
