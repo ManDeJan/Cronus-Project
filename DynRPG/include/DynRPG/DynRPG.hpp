@@ -14,7 +14,7 @@
 #define DYNRPG_HPP
 
 #ifndef __GNUC__
-	#error Sorry, DynRPG does only work with the GNU C++ compiler! See gcc.gnu.org
+	// #error Sorry, DynRPG does only work with the GNU C++ compiler! See gcc.gnu.org
 #endif // __GNUC__
 
 #ifndef __cplusplus
@@ -22,7 +22,7 @@
 #endif // __cplusplus
 
 #if __GNUC__ < 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 || (__GNUC_MINOR__ == 7 && __GNUC_PATCHLEVEL__ < 1)))
-	#error Sorry, this DynRPG version needs at least GNU C++ version 4.7.1! See gcc.gnu.org
+	// #error Sorry, this DynRPG version needs at least GNU C++ version 4.7.1! See gcc.gnu.org
 #endif
 
 // clang-format off

@@ -1,0 +1,41 @@
+Nop sequences:
+bytes  sequence                encoding
+
+ 1      90H                            NOP
+ 2      66 90H                         66 NOP
+ 3      0F 1F 00H                      NOP DWORD ptr [EAX]
+ 4      0F 1F 40 00H                   NOP DWORD ptr [EAX + 00H]
+ 5      0F 1F 44 00 00H                NOP DWORD ptr [EAX + EAX*1 + 00H]
+ 6      66 0F 1F 44 00 00H             NOP DWORD ptr [AX + AX*1 + 00H]
+ 7      0F 1F 80 00 00 00 00H          NOP DWORD ptr [EAX + 00000000H]
+ 8      0F 1F 84 00 00 00 00 00H       NOP DWORD ptr [AX + AX*1 + 00000000H]
+ 9      66 0F 1F 84 00 00 00 00 00H    NOP DWORD ptr [AX + AX*1 + 00000000H]
+Invalid Sequences: FF FF {FF}
+
+ins: e8 4a 12 01 00
+
+vervangen door
+push 0x1000xxxx
+ret
+
+0x10004f78 te vroeg / doet geen reet
+0x10004f94 haalt logo weg maar nog wel timer
+0x10004faf haalt logo weg maar nog wel timer
+0x10004fbd haalt logo weg maar nog wel timer
+0x10004fc8 haalt logo weg maar nog wel timer
+0x10004fc9 haalt logo weg maar nog wel timer
+0x10004fd4 Ja nu is ie stuk en launcht ie niet meer
+
+ins: e854760000
+
+0x10005063 kost nog geen tijd
+
+0x100051b0 - E8 4F 12 01 00 crash zonder wacht
+0x100051CB - 83 7D E0 00 crash zonder wacht
+0x10005421 - E8 26 36 00 00 crash (zonder) wacht
+0x10005583 - 83 7D E0 00 crash met wacht
+jump naar 0x1005595
+
+
+0x100052d5 - E8 06 D0 FF FF 6A heb ik vervangen door:
+68 95 55 00 10 C3 <- magische instructies
