@@ -10,3 +10,5 @@ Mappen overzicht:
 - `SFML` sfml bestanden
   Om sfml te bouwen heb je `mingw-w64-openal mingw-w64-libvorbis mingw-w64-flac` uit de aur nodig
   Bouw met `cmake -DCMAKE_TOOLCHAIN_FILE=../../mingw32-toolchain.cmake`
+- `fmt`
+  bouwen met `cmake -DCMAKE_TOOLCHAIN_FILE=../../mingw32-toolchain.cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DFMT_TEST=0 -DBUILD_SHARED_LIBS=TRUE`

@@ -23,12 +23,17 @@ add_library(MyFirstPlugin SHARED ${SOURCES})
 include_directories(
     ../DynRPG/include
     ../SFML/include
+    ../fmt/include
 )
 
 file(GLOB SFML_LIBS ${CMAKE_SOURCE_DIR}/../SFML/build/**/*.dll)
 
 target_link_libraries(MyFirstPlugin
 	PRIVATE ${CMAKE_SOURCE_DIR}/../DynRPG/lib/libDynRPG.a)
+
+target_link_libraries(
+    MyFirstPlugin PRIVATE ${CMAKE_SOURCE_DIR}/../fmt/build/bin/libfmt.dll
+)
 
 target_link_libraries(MyFirstPlugin
     PRIVATE ${SFML_LIBS})
