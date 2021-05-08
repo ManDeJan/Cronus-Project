@@ -36,6 +36,10 @@ ins: e854760000
 0x10005583 - 83 7D E0 00 crash met wacht
 jump naar 0x1005595
 
+0x1000519c - E8 0F 10 01 00 50
 
 0x100052d5 - E8 06 D0 FF FF 6A heb ik vervangen door:
 68 95 55 00 10 C3 <- magische instructies
+
+
+68 95 55 00 10 C3
