@@ -29,7 +29,6 @@ public:
         // No one look at this jank plz
         for (int y = screenHeight - 1; y >= 0; y--)
         {
-            fmt::print("Y is {}\n", y);
             for (int x = 0; x < screenWidth; x++)
             {
                 pixelArray[x + (screenHeight - 1 - y) * screenWidth] = RPG::screen->canvas->convert16To32Bit(*(buffer + y * screenWidth + x));
