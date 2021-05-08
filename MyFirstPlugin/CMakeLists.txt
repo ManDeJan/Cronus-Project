@@ -22,10 +22,16 @@ add_library(MyFirstPlugin SHARED ${SOURCES})
 
 include_directories(
     ../DynRPG/include
+    ../SFML/include
 )
+
+file(GLOB SFML_LIBS ${CMAKE_SOURCE_DIR}/../SFML/build/**/*.dll)
 
 target_link_libraries(MyFirstPlugin
 	PRIVATE ${CMAKE_SOURCE_DIR}/../DynRPG/lib/libDynRPG.a)
+
+target_link_libraries(MyFirstPlugin
+    PRIVATE ${SFML_LIBS})
 
 add_custom_command(TARGET MyFirstPlugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MyFirstPlugin> ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/MyFirstPlugin.dll
