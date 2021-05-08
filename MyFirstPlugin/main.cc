@@ -29,6 +29,7 @@ public:
         // No one look at this jank plz
         for (int y = screenHeight - 1; y >= 0; y--)
         {
+            fmt::print("Y is {}\n", y);
             for (int x = 0; x < screenWidth; x++)
             {
                 pixelArray[x + (screenHeight - 1 - y) * screenWidth] = RPG::screen->canvas->convert16To32Bit(*(buffer + y * screenWidth + x));
@@ -46,9 +47,6 @@ public:
     void setTexture(const sf::Texture &texture, bool resetRect = false) = delete;
     void setTextureRect(const sf::IntRect &rectangle) = delete;
 };
-
-std::unique_ptr<sf::RenderWindow> window;
-std::unique_ptr<RPG2K3Window> rpg;
 
 // Handler called on startup
 bool onStartup(char *pluginName)
@@ -81,9 +79,51 @@ bool onStartup(char *pluginName)
     }
 }
 
+class DvdBouncer
+{
+    sf::Transformable &obj;
+    sf::Vector2f direction = {1, 1};
+    sf::Vector2i objSize;
+    sf::Vector2i windowSize;
+
+public:
+    DvdBouncer(sf::Transformable &obj, sf::Vector2i objSize, sf::Vector2i windowSize) : obj(obj), objSize(objSize), windowSize(windowSize)
+    {
+    }
+
+    void update()
+    {
+        if (obj.getPosition().x + objSize.x * obj.getScale().x > windowSize.x || obj.getPosition().x < 0)
+        {
+            direction.x *= -1;
+            fmt::print("Flip\n");
+        }
+        if (obj.getPosition().y + objSize.y * obj.getScale().y > windowSize.y || obj.getPosition().y < 0)
+        {
+            direction.y *= -1;
+            fmt::print("Flip\n");
+        }
+        obj.move(direction);
+    }
+};
+
+std::unique_ptr<DvdBouncer> bouncer;
+std::unique_ptr<sf::RenderWindow> window;
+std::unique_ptr<RPG2K3Window> rpg;
+std::unique_ptr<sf::Texture> backgroundTexture;
+std::unique_ptr<sf::Sprite> background;
+
 void onDrawScreen()
 {
+    HWND winContext = GetParent(GetParent(RPG::screen->getCanvasHWND()));
+    ShowWindow(winContext, SW_HIDE);
+
+    window->clear();
+    
     rpg->updateTexture();
+    bouncer->update();
+
+    window->draw(*background);
     window->draw(*rpg);
     window->display();
 }
@@ -92,4 +132,8 @@ void onInitFinished()
 {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(640, 480), "Cronus");
     rpg = std::make_unique<RPG2K3Window>();
+    bouncer = std::make_unique<DvdBouncer>(*rpg, sf::Vector2i{320, 240}, sf::Vector2i{640, 480});
+    backgroundTexture = std::make_unique<sf::Texture>();
+    backgroundTexture->loadFromFile("background.png");
+    background = std::make_unique<sf::Sprite>(*backgroundTexture);
 }
