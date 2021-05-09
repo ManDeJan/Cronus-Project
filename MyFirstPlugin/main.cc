@@ -1,3 +1,4 @@
+#include "DynRPG/DynCore/PluginCallbacks.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -50,16 +51,15 @@ public:
 // Handler called on startup
 bool onStartup(char *pluginName)
 {
+    // don't mind this thanks
+    // Do not remove or game won't launch.
+    volatile short *magic_address = reinterpret_cast<volatile short *>(0x48FA57);
+    *magic_address = 0x9090;
 
     AllocConsole();
     AttachConsole(GetCurrentProcessId());
     freopen("CON", "w", stdout);
     sf::sleep(sf::milliseconds(250));
-
-    // don't mind this thanks
-    // Do not remove or game won't launch.
-    volatile short *magic_address = reinterpret_cast<volatile short *>(0x48FA57);
-    *magic_address = 0x9090;
 
     if (MessageBox(NULL,                                                 // We don't need a window handle
                    "This is a totally normal RPG Maker game, continue?", // Text
@@ -112,23 +112,35 @@ std::unique_ptr<RPG2K3Window> rpg;
 std::unique_ptr<sf::Texture> backgroundTexture;
 std::unique_ptr<sf::Sprite> background;
 
+void onFrame(RPG::Scene scene) {
+    bouncer->update();
+}
+
 void onDrawScreen()
 {
-    HWND winContext = GetParent(GetParent(RPG::screen->getCanvasHWND()));
-    ShowWindow(winContext, SW_HIDE);
-
     window->clear();
+<<<<<<< HEAD
 
     rpg->updateTexture();
     // bouncer->update();
 
     // window->draw(*background);
+=======
+    rpg->updateTexture();
+    window->draw(*background);
+>>>>>>> acab56dc7226db62777014d41522dd518a51a10b
     window->draw(*rpg);
     window->display();
 }
 
+void onInitTitleScreen() {
+    HWND winContext = GetParent(GetParent(RPG::screen->getCanvasHWND()));
+    ShowWindow(winContext, SW_HIDE);
+}
+
 void onInitFinished()
 {
+<<<<<<< HEAD
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus", sf::Style::Fullscreen);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
@@ -143,3 +155,13 @@ void onInitFinished()
     // backgroundTexture->loadFromFile("background.png");
     // background = std::make_unique<sf::Sprite>(*backgroundTexture);
 }
+=======
+
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(640, 480), "Cronus");
+    rpg = std::make_unique<RPG2K3Window>();
+    bouncer = std::make_unique<DvdBouncer>(*rpg, sf::Vector2i{320, 240}, sf::Vector2i{640, 480});
+    backgroundTexture = std::make_unique<sf::Texture>();
+    backgroundTexture->loadFromFile("background.png");
+    background = std::make_unique<sf::Sprite>(*backgroundTexture);
+}
+>>>>>>> acab56dc7226db62777014d41522dd518a51a10b
