@@ -119,16 +119,11 @@ void onFrame(RPG::Scene scene) {
 void onDrawScreen()
 {
     window->clear();
-<<<<<<< HEAD
 
     rpg->updateTexture();
     // bouncer->update();
 
     // window->draw(*background);
-=======
-    rpg->updateTexture();
-    window->draw(*background);
->>>>>>> acab56dc7226db62777014d41522dd518a51a10b
     window->draw(*rpg);
     window->display();
 }
@@ -140,7 +135,6 @@ void onInitTitleScreen() {
 
 void onInitFinished()
 {
-<<<<<<< HEAD
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus", sf::Style::Fullscreen);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
@@ -155,13 +149,3 @@ void onInitFinished()
     // backgroundTexture->loadFromFile("background.png");
     // background = std::make_unique<sf::Sprite>(*backgroundTexture);
 }
-=======
-
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(640, 480), "Cronus");
-    rpg = std::make_unique<RPG2K3Window>();
-    bouncer = std::make_unique<DvdBouncer>(*rpg, sf::Vector2i{320, 240}, sf::Vector2i{640, 480});
-    backgroundTexture = std::make_unique<sf::Texture>();
-    backgroundTexture->loadFromFile("background.png");
-    background = std::make_unique<sf::Sprite>(*backgroundTexture);
-}
->>>>>>> acab56dc7226db62777014d41522dd518a51a10b
