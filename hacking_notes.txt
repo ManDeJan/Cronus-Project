@@ -1,3 +1,9 @@
+Hier wat notities die ik gebruikte om dynloader.dll te patchen zodat
+ie dat klote opstart animatie van 3 seconden skipt. Was best veel effort.
+Maarja. Hadden ze maar niet in de docs moeten zetten dat dat logo niet uit
+te zetten was. I'll do it myself god dammit. Er zijn nu nog best wat zero
+bytes in de dll als je je eigen hackers manifesto onder dat van mij wilt plakken ;-)
+
 Nop sequences:
 bytes  sequence                encoding
 
