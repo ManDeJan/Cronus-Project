@@ -1,11 +1,12 @@
-#include "DynRPG/DynCore/PluginCallbacks.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
+#include <corecrt.h>
 #include <memory>
 #include <fmt/core.h>
 #include <assert.h>
+#include <sys/cdefs.h>
 
 class RPG2K3Window : public sf::Sprite
 {
@@ -112,8 +113,21 @@ std::unique_ptr<RPG2K3Window> rpg;
 std::unique_ptr<sf::Texture> backgroundTexture;
 std::unique_ptr<sf::Sprite> background;
 
+int x, y;
+
 void onFrame(RPG::Scene scene) {
-    bouncer->update();
+    // bouncer->update();
+    // for (int y = 0; y < RPG2K3Window::screenHeight; y++) {
+    //     auto scanline = RPG::screen->canvas->getScanline(y);
+    //     if (y % 3 == 0) {
+    //         for (int x = 0; x < RPG2K3Window::screenWidth; x++) {
+    //             scanline[x] = ~scanline[x];
+    //         }
+    //     }
+    // }
+    // auto tileset_graphics = RPG::map->properties->graphics->chipsetImage;
+    // fmt::print("Tileset img width & height : {} x {}\n", tileset_graphics->width, tileset_graphics->height);
+    // tileset_graphics->pixels[x++ + 240 * y++] = 0x0000;
 }
 
 void onDrawScreen()

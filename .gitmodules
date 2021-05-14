@@ -4,3 +4,6 @@
 [submodule "fmt"]
 	path = fmt
 	url = git@github.com:fmtlib/fmt.git
+[submodule "flite"]
+	path = flite
+	url = https://github.com/festvox/flite.git
