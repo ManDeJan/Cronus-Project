@@ -7,3 +7,6 @@
 [submodule "flite"]
 	path = flite
 	url = https://github.com/festvox/flite.git
+[submodule "cpp-httplib"]
+	path = cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib
