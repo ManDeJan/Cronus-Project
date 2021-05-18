@@ -1,0 +1,18 @@
+﻿---
+BasedOnStyle: LLVM
+AccessModifierOffset: '-4'
+AlignEscapedNewlines: Left
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Always
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: 'true'
+ColumnLimit: '120'
+IndentWidth: '4'
+PointerAlignment: Right
+Standard: Auto
+TabWidth: '4'
+UseTab: Never
+
+...
