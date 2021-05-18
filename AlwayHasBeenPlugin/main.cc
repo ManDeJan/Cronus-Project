@@ -18,18 +18,6 @@
 #include <fstream>
 #include <iomanip>
 
-bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
-               RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
-    // std::string_view comment = text;
-    // TODO: apparantly I don't need to parse everything by hand like an idiot cause there is already parsedData
-    // available If only I read past the first argument of this function 🤷🏼‍♂️
-    // if ((comment.starts_with("@change_anim(") and comment.ends_with(")"))) {
-    //     change_anim(comment.substr(13, comment.length() - 14));
-    //     return true;
-    // }
-
-    return false;
-}
 int rgb_to_bgr(const int rgb) {
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
