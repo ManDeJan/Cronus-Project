@@ -16,17 +16,18 @@ add_compile_options(-O3 -Wall -Wextra -Wpedantic -Wl,--subsystem,windows)
 
 file(GLOB_RECURSE SOURCES
 	${CMAKE_CURRENT_LIST_DIR}/main.cc
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.cc
 )
 
 # add_library(TwitchPlugin SHARED ${SOURCES})
 add_executable(TwitchPlugin ${SOURCES})
 
 target_include_directories(TwitchPlugin PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/include
     ${CMAKE_CURRENT_LIST_DIR}/../DynRPG/include
     ${CMAKE_CURRENT_LIST_DIR}/../fmt/include
     ${CMAKE_CURRENT_LIST_DIR}/../cpp-httplib
     ${CMAKE_CURRENT_LIST_DIR}/../SFML/include
-    ${CMAKE_CURRENT_LIST_DIR}/../GSL/include
 )
 
 file(GLOB SFML_LIBS ${CMAKE_SOURCE_DIR}/../SFML/build/**/*.dll)
