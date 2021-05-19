@@ -3,10 +3,13 @@
 #include <atomic>
 #include <string>
 
-#include <shellapi.h>
-#include <windows.h>
+// clang-format off
+// order is super important for windows .....
 #include <winsock2.h>
+#include <windows.h>
+#include <shellapi.h>
 #include <ws2tcpip.h>
+// clang-format on
 
 class ChatSocket {
 private:
