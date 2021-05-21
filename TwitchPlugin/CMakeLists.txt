@@ -15,31 +15,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-O3 -Wall -Wextra -Wpedantic -Wl,--subsystem,windows)
 
 file(GLOB_RECURSE SOURCES
-	main.cc
+	${CMAKE_CURRENT_LIST_DIR}/main.cc
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.cc
 )
 
 add_library(TwitchPlugin SHARED ${SOURCES})
+# add_executable(TwitchPlugin ${SOURCES})
 
-include_directories(
-    ../DynRPG/include
-    ../fmt/include
-    ../cpp-httplib
+target_include_directories(TwitchPlugin PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/../DynRPG/include
+    ${CMAKE_CURRENT_LIST_DIR}/../fmt/include
+    ${CMAKE_CURRENT_LIST_DIR}/../cpp-httplib
+    ${CMAKE_CURRENT_LIST_DIR}/../SFML/include
 )
 
 file(GLOB SFML_LIBS ${CMAKE_SOURCE_DIR}/../SFML/build/**/*.dll)
 
-target_link_libraries(TwitchPlugin
-	PRIVATE ${CMAKE_SOURCE_DIR}/../DynRPG/lib/libDynRPG.a
-		ws2_32
-		crypt32
-    )
-
-target_link_libraries(
-    TwitchPlugin PRIVATE ${CMAKE_SOURCE_DIR}/../fmt/build/bin/libfmt.dll
+target_link_libraries(TwitchPlugin PRIVATE 
+    ${CMAKE_SOURCE_DIR}/../DynRPG/lib/libDynRPG.a
+    ${CMAKE_SOURCE_DIR}/../fmt/build/bin/libfmt.dll
+    ${SFML_LIBS}
+    ws2_32
+    crypt32
 )
-
-target_link_libraries(TwitchPlugin
-    PRIVATE ${SFML_LIBS})
 
 add_custom_command(TARGET TwitchPlugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:TwitchPlugin> ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/TwitchPlugin.dll
