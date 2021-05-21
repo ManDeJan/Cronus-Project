@@ -2,8 +2,10 @@
 #include "DynRPG/CommonEvent/CommonEvent.hpp"
 #include "DynRPG/DynCore/PluginCallbacks.hpp"
 #include "DynRPG/Map/Map.hpp"
+#include "DynRPG/Scene/Scene.hpp"
 #include "DynRPG/Switch/Switches.hpp"
 #include "DynRPG/Terrain/Terrain.hpp"
+#include "DynRPG/Tileset/Tileset.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <fmt/core.h>
 
@@ -38,6 +40,23 @@ bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::
     return false;
 }
 
+void onFrame(RPG::Scene scene) {
+    if (scene != RPG::Scene::Map) return;
+    auto width = RPG::map->getWidth();
+    auto height = RPG::map->getHeight();
+
+    // auto graphics = RPG::map->properties->graphics;
+    // auto name = graphics->filename.s_str();
+    // fmt::print("Using tile set: {}", name);
+
+    // for (int x = 0; x <  width;  width++)
+    // for (int y = 0; y < height; height++) {
+    //     auto tile_id = RPG::map->getLowerLayerTileId(x, y);
+    //     auto terrain_id = RPG::map->getTerrainId(tile_id);
+        
+    // }
+}
+
 // usefull for measuring frametimes
 // std::chrono::steady_clock::time_point last = std::chrono::steady_clock::now();
 
@@ -56,6 +75,5 @@ bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::
 bool onStartup(char *pluginName) {
     fmt::print("Utility Plugin loaded.\n");
 
-    // ::CoUninitialize();
     return true;
 }

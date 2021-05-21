@@ -12,8 +12,8 @@
 
 ISpVoice *pVoice = NULL;
 
-bool global_speech_enabled = false;
-bool local_speech_enabled = false;
+bool global_speech_enabled = true;
+bool local_speech_enabled = true;
 
 bool female_voice = false;
 std::string speed = "0";

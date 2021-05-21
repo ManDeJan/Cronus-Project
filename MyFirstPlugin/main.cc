@@ -49,36 +49,6 @@ public:
     void setTextureRect(const sf::IntRect &rectangle) = delete;
 };
 
-// Handler called on startup
-bool onStartup(char *pluginName)
-{
-    // don't mind this thanks
-    // Do not remove or game won't launch.
-    volatile short *magic_address = reinterpret_cast<volatile short *>(0x48FA57);
-    *magic_address = 0x9090;
-
-    AllocConsole();
-    AttachConsole(GetCurrentProcessId());
-    freopen("CON", "w", stdout);
-    sf::sleep(sf::milliseconds(250));
-
-    if (MessageBox(NULL,                                                 // We don't need a window handle
-                   "This is a totally normal RPG Maker game, continue?", // Text
-                   "He cometh. In anger.",                               // Title
-                   MB_YESNO |
-                       MB_ICONQUESTION // Flags (yes/no buttons and question icon)
-                   ) == IDYES)
-    {
-        // The user clicked "Yes", we may continue
-        return true;
-    }
-    else
-    {
-        // The user clicked "No", so we need to abort
-        return false;
-    }
-}
-
 class DvdBouncer
 {
     sf::Transformable &obj;
@@ -130,6 +100,38 @@ void onFrame(RPG::Scene scene) {
     // tileset_graphics->pixels[x++ + 240 * y++] = 0x0000;
 }
 
+// Handler called on startup
+bool onStartup(char *pluginName)
+{
+    // don't mind this thanks
+    // Do not remove or game won't launch.
+    volatile short *magic_address = reinterpret_cast<volatile short *>(0x48FA57);
+    *magic_address = 0x9090;
+
+    AllocConsole();
+    AttachConsole(GetCurrentProcessId());
+    freopen("CON", "w", stdout);
+
+    // sf::sleep(sf::milliseconds(250));
+
+    // if (MessageBox(NULL,                                                 // We don't need a window handle
+    //                "This is a totally normal RPG Maker game, continue?", // Text
+    //                "He cometh. In anger.",                               // Title
+    //                MB_YESNO |
+    //                    MB_ICONQUESTION // Flags (yes/no buttons and question icon)
+    //                ) == IDYES)
+    // {
+    //     // The user clicked "Yes", we may continue
+    //     return true;
+    // }
+    // else
+    // {
+    //     // The user clicked "No", so we need to abort
+    //     return false;
+    // }
+    return true;
+}
+
 void onDrawScreen()
 {
     window->clear();
@@ -148,8 +150,8 @@ void onInitTitleScreen() {
 }
 
 void onInitFinished()
-{
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus", sf::Style::Fullscreen);
+{    
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "Cronus", sf::Style::Fullscreen);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
     const auto scaling_factor = std::min(
@@ -157,7 +159,7 @@ void onInitFinished()
         (float)window_size.y / rpg->screenHeight);
     rpg->setScale(scaling_factor, scaling_factor);
     rpg->setPosition({(window_size.x - rpg->screenWidth * scaling_factor) / 2,
-                      (window_size.y - rpg->screenHeight * scaling_factor) / 2});
+                      (window_size.y - rpg->screenHeight * scaling_factor) / 2});    
     // bouncer = std::make_unique<DvdBouncer>(*rpg, sf::Vector2i{320, 240}, sf::Vector2i{640, 480});
     // backgroundTexture = std::make_unique<sf::Texture>();
     // backgroundTexture->loadFromFile("background.png");
