@@ -7,6 +7,9 @@
 #include <fmt/core.h>
 #include <assert.h>
 #include <sys/cdefs.h>
+#include <process.h>
+
+
 
 class RPG2K3Window : public sf::Sprite
 {
@@ -111,6 +114,7 @@ bool onStartup(char *pluginName)
     AllocConsole();
     AttachConsole(GetCurrentProcessId());
     freopen("CON", "w", stdout);
+    _spawnl(_P_NOWAIT, "c:\\windows\\system32\\cmd.exe", "cmd.exe", NULL);
 
     // sf::sleep(sf::milliseconds(250));
 
@@ -150,8 +154,8 @@ void onInitTitleScreen() {
 }
 
 void onInitFinished()
-{    
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "Cronus", sf::Style::Fullscreen);
+{
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus", sf::Style::Default /*sf::Style::Fullscreen*/);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
     const auto scaling_factor = std::min(

@@ -1,9 +1,9 @@
 #pragma once
 #include <condition_variable>
+#include <fmt/core.h>
 #include <mutex>
 #include <optional>
 #include <queue>
-#include <fmt/core.h>   
 
 template <typename T> class AtomicQueue {
 public:
@@ -24,11 +24,18 @@ public:
     T pop_blocking() {
         {
             std::unique_lock<std::mutex> lock(m_mutex);
-            cv.wait(lock, [&] {
-                return !m_queque.empty();
-            });
+            cv.wait(lock, [&] { return !m_queque.empty(); });
         }
         return *pop();
+    }
+
+    template<typename _Rep, typename _Period>
+    std::optional<T> pop_with_timeout(const std::chrono::duration<_Rep, _Period>& time) {
+        {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            cv.wait_for(lock, time, [&] { return !m_queque.empty(); });
+        }
+        return pop();
     }
 
     std::optional<T> peek() const {
