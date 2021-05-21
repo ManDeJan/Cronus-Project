@@ -1,12 +1,15 @@
 #pragma once
+#include <condition_variable>
 #include <mutex>
 #include <optional>
 #include <queue>
+#include <fmt/core.h>   
 
 template <typename T> class AtomicQueue {
 public:
     void push(const T &value) {
         std::lock_guard<std::mutex> lock(m_mutex);
+        cv.notify_all();
         m_queque.push(value);
     }
 
@@ -19,9 +22,13 @@ public:
     }
 
     T pop_blocking() {
-        std::optional<T> t;
-        while (!(t = pop())) {}
-        return *t;
+        {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            cv.wait(lock, [&] {
+                return !m_queque.empty();
+            });
+        }
+        return *pop();
     }
 
     std::optional<T> peek() const {
@@ -33,4 +40,5 @@ public:
 private:
     std::queue<T> m_queque;
     mutable std::mutex m_mutex{};
+    std::condition_variable cv;
 };

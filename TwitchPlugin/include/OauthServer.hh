@@ -5,9 +5,9 @@
 #include <thread>
 
 struct TwitchOAUTHServer {
-    httplib::Server svr;
+    httplib::Server svr{};
     std::unique_ptr<std::thread> http_thread;
-    std::string oauth_token;
+    std::string oauth_token{};
 
     TwitchOAUTHServer();
     void run();

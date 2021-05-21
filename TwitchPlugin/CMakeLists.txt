@@ -19,8 +19,8 @@ file(GLOB_RECURSE SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/*.cc
 )
 
-# add_library(TwitchPlugin SHARED ${SOURCES})
-add_executable(TwitchPlugin ${SOURCES})
+add_library(TwitchPlugin SHARED ${SOURCES})
+# add_executable(TwitchPlugin ${SOURCES})
 
 target_include_directories(TwitchPlugin PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
@@ -40,7 +40,7 @@ target_link_libraries(TwitchPlugin PRIVATE
     crypt32
 )
 
-# add_custom_command(TARGET TwitchPlugin POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:TwitchPlugin> ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/TwitchPlugin.dll
-#     COMMENT "Created ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/TwitchPlugin.dll"
-# )
+add_custom_command(TARGET TwitchPlugin POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:TwitchPlugin> ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/TwitchPlugin.dll
+    COMMENT "Created ${CMAKE_SOURCE_DIR}/../Cronus/DynPlugins/TwitchPlugin.dll"
+)

@@ -1,37 +1,60 @@
-#include "DynRPG/Character/AnimationType.hpp"
 #include "DynRPG/DynCore/PluginCallbacks.hpp"
-#include "DynRPG/Map/Map.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <fmt/core.h>
 
-#include "TwitchChat.hh"
 #include "OauthServer.hh"
+#include "TwitchChat.hh"
 
+#include <cassert>
 
 TwitchOAUTHServer srv;
 TwitchChat tc;
 
-void onInitFinished() {
+void twitchAuth() {
     srv.run();
     srv.openLoginBrowser();
-    fmt::print("Twitch plugin loaded.\n");
 }
 
-void onNewGame() { srv.stop(); }
-void onLoadGame(int id, char *data, int length) { srv.stop(); }
-
-int main(int argc, char *argv[]) {
-    assert(argc == 3);
+void twitchChatJoin() {
+    fmt::print("Join chat!\n");
     try {
+        srv.stop();
         tc.connect();
         tc.run();
-        tc.login(argv[2], argv[1]);
-        tc.join("vagabonddog");
-        tc.sendMessage("vagabonddog", "This was sent from my c++ plugin :D");
-        while (true) { fmt::print("Msg: {}", tc.message_queue.pop_blocking()); };
+        tc.login(srv.oauth_token, "thisisanusername");
+        tc.join(RPG::hero->getName());
+        tc.sendMessage(RPG::hero->getName(), "Cronus bot joined the chat!");
     } catch (std::exception &e) {
-        tc.stop();
-        fmt::print(stderr, "Exception: {}", e.what());
+        fmt::print(stderr, "ERRR {}\n", e.what());
     }
-    while (true) {}
 }
+
+bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
+               RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
+    fmt::print("cmd? {}\n", parsedData->command);
+    if (strcmp(parsedData->command, "twitchlogin") == 0) {
+        twitchAuth();
+        return false;
+    } else if (strcmp(parsedData->command, "twitchauthcheck") == 0) {
+        if (!srv.oauth_token.empty()) {
+            twitchChatJoin();
+            nextScriptLine->command = RPG::EventCommand::ShowMessage;
+            nextScriptLine->stringParameter = "Success";
+        }
+        return false;
+    }
+    return true;
+}
+
+// int main(int argc, char *argv[]) {
+//     srv.run();
+//     srv.openLoginBrowser();
+//     srv.run();
+//     srv.openLoginBrowser();
+//     while(srv.oauth_token == ""){}
+//     tc.connect();
+//     tc.run();
+//     tc.login(srv.oauth_token, "asdf");
+//     tc.join(RPG::Hero::getName());
+//     while (true) { fmt::print("Msg: {}", tc.message_queue.pop_blocking()); };
+// }

@@ -48,5 +48,6 @@ void TwitchChat::join(std::string_view channel_name) {
 void TwitchChat::sendMessage(std::string_view channel_name, std::string_view msg) {
     assert(channel_name.find("\n") == std::string_view::npos);
     assert(msg.find("\n") == std::string_view::npos);
+    fmt::print("Sending msg \"{}\" to channel {}", msg, channel_name);
     cs.send(fmt::format("PRIVMSG #{} : {}\n", channel_name, msg));
 }

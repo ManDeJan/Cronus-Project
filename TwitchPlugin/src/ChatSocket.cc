@@ -82,6 +82,7 @@ void ChatSocket::disconnect() {
 }
 
 void ChatSocket::send(std::string_view f) const {
+    fmt::print("Sending msg: {}\n", f);
     auto iResult = ::send(ConnectSocket, f.data(), f.length(), 0);
     if (iResult == SOCKET_ERROR) { throw std::runtime_error(fmt::format("Socket error {}", WSAGetLastError())); };
 }

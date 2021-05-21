@@ -5,7 +5,9 @@ TwitchOAUTHServer::TwitchOAUTHServer() {
     svr.Get("/hi",
             [](const httplib::Request &, httplib::Response &res) { res.set_content("Hello World!", "text/plain"); });
     svr.Get("/oauth_redirect", [](const httplib::Request &, httplib::Response &res) {
-        res.set_content(R"(<h1>success</h1>
+        res.set_content(R"(<h1>Cronus game</h1>
+        <h2>success</h2>
+            <div>You can return to the game now!</div>
             <script>
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "text/plain");
@@ -18,7 +20,6 @@ TwitchOAUTHServer::TwitchOAUTHServer() {
             };
 
             fetch("http://localhost:42069/oauth_token", requestOptions)
-            .then(result => window.close())
             </script>
             )",
                         "text/html");
