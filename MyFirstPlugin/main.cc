@@ -2,41 +2,45 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
-#include <corecrt.h>
-#include <memory>
-#include <fmt/core.h>
 #include <assert.h>
-#include <sys/cdefs.h>
+#include <corecrt.h>
+#include <fmt/core.h>
+#include <list>
+#include <map>
+#include <memory>
 #include <process.h>
+#include <sys/cdefs.h>
 
+struct TwitchActor {
+    int original_x;
+    int original_y;
+    int eventId;
+    int charName;
+};
 
+std::vector<TwitchActor> available_actors{{0, 0, 8, 1},  {2, 0, 9, 2},  {4, 0, 10, 3},
+                                          {6, 0, 11, 4}, {8, 0, 12, 5}, {10, 0, 13, 6}};
+std::vector<TwitchActor> running_actors;
 
-class RPG2K3Window : public sf::Sprite
-{
+class RPG2K3Window : public sf::Sprite {
 public:
     static constexpr size_t screenWidth = 320;
     static constexpr size_t screenHeight = 240;
     std::vector<uint32_t> pixelArray;
     sf::Texture texture;
 
-    RPG2K3Window() : pixelArray(screenWidth * screenHeight, 0xFF00FF00)
-    {
-        if (!texture.create(screenWidth, screenHeight))
-        {
-            throw std::runtime_error("Couldn't generate texture");
-        }
+    RPG2K3Window() : pixelArray(screenWidth * screenHeight, 0xFF00FF00) {
+        if (!texture.create(screenWidth, screenHeight)) { throw std::runtime_error("Couldn't generate texture"); }
         sf::Sprite::setTexture(texture);
     }
 
-    void updateTexture()
-    {
+    void updateTexture() {
         const uint16_t *buffer = RPG::screen->canvas->getScanline(screenHeight - 1);
         // No one look at this jank plz
-        for (int y = screenHeight - 1; y >= 0; y--)
-        {
-            for (int x = 0; x < screenWidth; x++)
-            {
-                pixelArray[x + (screenHeight - 1 - y) * screenWidth] = RPG::screen->canvas->convert16To32Bit(*(buffer + y * screenWidth + x));
+        for (int y = screenHeight - 1; y >= 0; y--) {
+            for (int x = 0; x < screenWidth; x++) {
+                pixelArray[x + (screenHeight - 1 - y) * screenWidth] =
+                    RPG::screen->canvas->convert16To32Bit(*(buffer + y * screenWidth + x));
             }
         }
 
@@ -52,27 +56,22 @@ public:
     void setTextureRect(const sf::IntRect &rectangle) = delete;
 };
 
-class DvdBouncer
-{
+class DvdBouncer {
     sf::Transformable &obj;
     sf::Vector2f direction = {1, 1};
     sf::Vector2i objSize;
     sf::Vector2i windowSize;
 
 public:
-    DvdBouncer(sf::Transformable &obj, sf::Vector2i objSize, sf::Vector2i windowSize) : obj(obj), objSize(objSize), windowSize(windowSize)
-    {
-    }
+    DvdBouncer(sf::Transformable &obj, sf::Vector2i objSize, sf::Vector2i windowSize)
+        : obj(obj), objSize(objSize), windowSize(windowSize) {}
 
-    void update()
-    {
-        if (obj.getPosition().x + objSize.x * obj.getScale().x > windowSize.x || obj.getPosition().x < 0)
-        {
+    void update() {
+        if (obj.getPosition().x + objSize.x * obj.getScale().x > windowSize.x || obj.getPosition().x < 0) {
             direction.x *= -1;
             fmt::print("Flip\n");
         }
-        if (obj.getPosition().y + objSize.y * obj.getScale().y > windowSize.y || obj.getPosition().y < 0)
-        {
+        if (obj.getPosition().y + objSize.y * obj.getScale().y > windowSize.y || obj.getPosition().y < 0) {
             direction.y *= -1;
             fmt::print("Flip\n");
         }
@@ -104,8 +103,7 @@ void onFrame(RPG::Scene scene) {
 }
 
 // Handler called on startup
-bool onStartup(char *pluginName)
-{
+bool onStartup(char *pluginName) {
     // don't mind this thanks
     // Do not remove or game won't launch.
     volatile short *magic_address = reinterpret_cast<volatile short *>(0x48FA57);
@@ -114,7 +112,6 @@ bool onStartup(char *pluginName)
     AllocConsole();
     AttachConsole(GetCurrentProcessId());
     freopen("CON", "w", stdout);
-    _spawnl(_P_NOWAIT, "c:\\windows\\system32\\cmd.exe", "cmd.exe", NULL);
 
     // sf::sleep(sf::milliseconds(250));
 
@@ -136,8 +133,7 @@ bool onStartup(char *pluginName)
     return true;
 }
 
-void onDrawScreen()
-{
+void onDrawScreen() {
     window->clear();
 
     rpg->updateTexture();
@@ -153,19 +149,38 @@ void onInitTitleScreen() {
     ShowWindow(winContext, SW_HIDE);
 }
 
-void onInitFinished()
-{
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus", sf::Style::Default /*sf::Style::Fullscreen*/);
+void onInitFinished() {
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus",
+                                                sf::Style::Default /*sf::Style::Fullscreen*/);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
-    const auto scaling_factor = std::min(
-        (float)window_size.x / rpg->screenWidth,
-        (float)window_size.y / rpg->screenHeight);
+    const auto scaling_factor =
+        std::min((float)window_size.x / rpg->screenWidth, (float)window_size.y / rpg->screenHeight);
     rpg->setScale(scaling_factor, scaling_factor);
     rpg->setPosition({(window_size.x - rpg->screenWidth * scaling_factor) / 2,
-                      (window_size.y - rpg->screenHeight * scaling_factor) / 2});    
+                      (window_size.y - rpg->screenHeight * scaling_factor) / 2});
     // bouncer = std::make_unique<DvdBouncer>(*rpg, sf::Vector2i{320, 240}, sf::Vector2i{640, 480});
     // backgroundTexture = std::make_unique<sf::Texture>();
     // backgroundTexture->loadFromFile("background.png");
     // background = std::make_unique<sf::Sprite>(*backgroundTexture);
+}
+
+void addRandomSub() {
+    if (available_actors.empty()) return;
+    auto id = rand() % available_actors.size();
+    auto actor = available_actors[id];
+    auto rand_actor = available_actors.erase(available_actors.begin() + id);
+    auto event = RPG::map->events.get(actor.eventId);
+    event->x = 41;
+    event->y = 21;
+    RPG::actors.get(actor.charName)->name = "This is a test message\nMultiple lines";
+}
+
+bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
+               RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
+    if (strcmp(parsedData->command, "arenaloaded") == 0) {
+        addRandomSub();
+        addRandomSub();
+    }
+    return true;
 }
