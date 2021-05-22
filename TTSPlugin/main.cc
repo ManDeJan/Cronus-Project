@@ -3,13 +3,15 @@
 #include "DynRPG/Event/EventCommand.hpp"
 #include "DynRPG/Map/Map.hpp"
 #include <DynRPG/DynRPG.hpp>
-#include <sapi.h>
-#include <objbase.h>
+#include <charconv>
 #include <fmt/core.h>
+#include <objbase.h>
+#include <regex>
+#include <sapi.h>
 
 #include <iostream>
 #include <string>
-#include <string_view> 
+#include <string_view>
 
 ISpVoice *pVoice = NULL;
 
@@ -21,15 +23,30 @@ std::string speed = "0";
 std::string pitch = "0";
 
 // Jank code, shhhh 😘
-bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine, RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
+bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
+               RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
     std::string_view comment = text;
     if (!(comment.starts_with("@tts(") and comment.ends_with(")"))) return true;
     fmt::print("Comment {}\n", comment);
 
-    if (comment.find("@tts(global_off)") != std::string::npos) { fmt::print("tts disabled\n"); global_speech_enabled = false; return false; }
-    if (comment.find("@tts(global_on)")  != std::string::npos) { fmt::print("tts enabled\n");  global_speech_enabled = true;  return false; }
-    if (comment.find("@tts(off)")        != std::string::npos) { fmt::print("tts off\n");      local_speech_enabled = false;  return false; }
-    else                                                       { fmt::print("tts on\n");       local_speech_enabled = true;                 }
+    if (comment.find("@tts(global_off)") != std::string::npos) {
+        fmt::print("tts disabled\n");
+        global_speech_enabled = false;
+        return false;
+    }
+    if (comment.find("@tts(global_on)") != std::string::npos) {
+        fmt::print("tts enabled\n");
+        global_speech_enabled = true;
+        return false;
+    }
+    if (comment.find("@tts(off)") != std::string::npos) {
+        fmt::print("tts off\n");
+        local_speech_enabled = false;
+        return false;
+    } else {
+        fmt::print("tts on\n");
+        local_speech_enabled = true;
+    }
 
     auto pos1 = comment.find_first_of(",", 5);
     if (pos1 == std::string::npos) {
@@ -73,43 +90,69 @@ std::string get_full_message(int current_line, RPG::EventScriptData *scriptData)
     return message;
 };
 
-bool onEventCommand(RPG::EventScriptLine *scriptLine, RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
+std::string interpolate_string(std::string in) {
+    std::size_t i = 0;
+    fmt::print("a\n");
+    while ((i = in.find("\\N["), i) != std::string::npos) {
+        int char_id = -1;
+        auto f = std::from_chars(in.data() + i + 3, in.data() + in.size(), char_id);
+
+        if (f.ec != std::errc()) {
+            i = i + 3;
+            continue;
+        }
+        if (char_id < RPG::actors.count()) {
+            auto name = RPG::actors.get(char_id)->getName();
+            fmt::print("Replacing name {} {}\n", char_id, name);
+            in.replace(i, (f.ptr - in.data()) + 1, name);
+        }
+        i = f.ptr - in.data();
+    }
+    fmt::print("c\n");
+    std::regex colours{R"(\\C[\d+])"};
+    std::regex_replace(in.begin(), in.begin(), in.end(), colours, "");
+    i = 0;
+    while ((i = in.find("\\|", i)) != std::string::npos) { in.erase(i, i + 2); }
+    i = 0;
+    while ((i = in.find("\\.", i)) != std::string::npos) { in.erase(i, i + 2); }
+    fmt::print("{}\n", in);
+    return in;
+}
+
+bool onEventCommand(RPG::EventScriptLine *scriptLine, RPG::EventScriptData *scriptData, int eventId, int pageId,
+                    int lineId, int *nextLineId) {
     auto command_type = scriptLine->command;
 
-    if (!(command_type == RPG::EventCommand::ShowMessage ||
-          command_type == RPG::EventCommand::AddLineToMessage))
+    if (!(command_type == RPG::EventCommand::ShowMessage || command_type == RPG::EventCommand::AddLineToMessage))
         return true;
 
     auto message = get_full_message(lineId, scriptData);
     fmt::print("Msg: {}\n", message);
 
     if (!global_speech_enabled) return true;
-    if (!local_speech_enabled)  return true;
+    if (!local_speech_enabled) return true;
 
     std::string speech_xml;
     speech_xml += std::string()
                 + "<voice required=\"Gender=" + (female_voice ? "fe" : "") 
                 + "male\"><rate absspeed=\"" + speed
                 + "\"><pitch middle = '" + pitch + "'/>";
-    speech_xml += message;
+    speech_xml += interpolate_string(message);
     fmt::print("XML:\n{}\n", speech_xml);
-    pVoice->Speak(std::wstring(speech_xml.begin(), speech_xml.end()).c_str(), SPF_ASYNC | SPF_PURGEBEFORESPEAK | SPF_IS_XML, NULL );
+    pVoice->Speak(std::wstring(speech_xml.begin(), speech_xml.end()).c_str(),
+                  SPF_ASYNC | SPF_PURGEBEFORESPEAK | SPF_IS_XML, NULL);
 
     return true;
 }
 
-bool onStartup(char *pluginName)
-{
+bool onStartup(char *pluginName) {
     if (FAILED(::CoInitialize(NULL))) {
         fmt::print("TTS Plugin failed to load\n");
         return false;
     }
 
     HRESULT hr = CoCreateInstance(CLSID_SpVoice, NULL, CLSCTX_ALL, IID_ISpVoice, (void **)&pVoice);
-    if( SUCCEEDED( hr ) ) {
-        fmt::print("TTS Plugin loaded.\n");
-
-    }
+    if (SUCCEEDED(hr)) { fmt::print("TTS Plugin loaded.\n"); }
     // ::CoUninitialize();
     return true;
 }
