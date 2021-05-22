@@ -1,7 +1,12 @@
+#include "DynRPG/Attribute/Attribute.hpp"
+#include "DynRPG/Battle/BattleData.hpp"
+#include "DynRPG/Character/Hero.hpp"
 #include "DynRPG/DynCore/PluginCallbacks.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <fmt/core.h>
 
+#include "DynRPG/System/System.hpp"
+#include "DynRPG/Variable/Variables.hpp"
 #include "OauthServer.hh"
 #include "TwitchChat.hh"
 
@@ -21,9 +26,9 @@ bool twitchChatJoin() {
         srv.stop();
         tc.connect();
         tc.run();
-        tc.login(srv.oauth_token, "thisisanusername");
+        tc.login(srv.oauth_token, "thisisanusername"); // haha anus
         tc.join(RPG::hero->getName());
-        tc.sendMessage(RPG::hero->getName(), "Cronus bot joined the chat!");
+        tc.sendMessage(RPG::hero->getName(), "This message was send by a human!");
         return true;
     } catch (std::exception &e) {
         fmt::print(stderr, "ERRR {}\n", e.what());
@@ -54,4 +59,11 @@ bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::
 bool onStartup(char *pluginName) {
     fmt::print("Twitch Plugin loaded.\n");
     return true;
+}
+
+void onFrame(RPG::Scene scene) {
+    while (tc.message_queue.peek()) {
+        auto msg = *tc.message_queue.pop();
+        fmt::print("Found a message in the queue!\n --- {}\n", msg);
+    }
 }
