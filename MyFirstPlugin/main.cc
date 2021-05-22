@@ -169,18 +169,33 @@ void addRandomSub() {
     if (available_actors.empty()) return;
     auto id = rand() % available_actors.size();
     auto actor = available_actors[id];
-    auto rand_actor = available_actors.erase(available_actors.begin() + id);
+    available_actors.erase(available_actors.begin() + id);
+    running_actors.push_back(actor);
     auto event = RPG::map->events.get(actor.eventId);
     event->x = 41;
     event->y = 21;
     RPG::actors.get(actor.charName)->name = "This is a test message\nMultiple lines";
 }
 
+void returnSub(int id) {
+    auto res =
+        std::find_if(running_actors.begin(), running_actors.end(), [&](TwitchActor a) { return a.eventId == id; });
+    if (res != running_actors.end()) {
+        auto event = RPG::map->events.get(id);
+        event->x = res->original_x;
+        event->y = res->original_y;
+        available_actors.push_back(*res);
+        running_actors.erase(res);
+    }
+};
+
 bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
                RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
     if (strcmp(parsedData->command, "arenaloaded") == 0) {
         addRandomSub();
         addRandomSub();
+        return false;
     }
+    if (strcmp(parsedData->command, "returnhome") == 0) { returnSub(eventId); }
     return true;
 }
