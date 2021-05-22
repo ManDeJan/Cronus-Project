@@ -1,5 +1,6 @@
 #include "DynRPG/Character/AnimationType.hpp"
 #include "DynRPG/DynCore/PluginCallbacks.hpp"
+#include "DynRPG/Event/EventCommand.hpp"
 #include "DynRPG/Map/Map.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <sapi.h>
@@ -58,6 +59,20 @@ bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::
     return false;
 }
 
+// why did we need to make this... :'(
+std::string get_full_message(int current_line, RPG::EventScriptData *scriptData) {
+    auto line_count = scriptData->lines->list->count;
+    std::string message = scriptData->line(current_line)->stringParameter.s_str();
+    // fmt::print("--- Current: {} Count: {}\n", lineId, scriptData->lines->list->count);
+    for (int next_line_id = current_line + 1; next_line_id < line_count; next_line_id += 1) {
+        auto next_line = scriptData->line(next_line_id);
+        if (next_line->command != RPG::EventCommand::AddLineToMessage) break;
+        message += " " + next_line->stringParameter.s_str();
+        // fmt::print("NextType: {} NextStr: {}\n", next_line->command, next_line->stringParameter.s_str());
+    }
+    return message;
+};
+
 bool onEventCommand(RPG::EventScriptLine *scriptLine, RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
     auto command_type = scriptLine->command;
 
@@ -65,7 +80,8 @@ bool onEventCommand(RPG::EventScriptLine *scriptLine, RPG::EventScriptData *scri
           command_type == RPG::EventCommand::AddLineToMessage))
         return true;
 
-    fmt::print("Msg: {}\n", std::string(scriptLine->stringParameter));
+    auto message = get_full_message(lineId, scriptData);
+    fmt::print("Msg: {}\n", message);
 
     if (!global_speech_enabled) return true;
     if (!local_speech_enabled)  return true;
@@ -75,7 +91,7 @@ bool onEventCommand(RPG::EventScriptLine *scriptLine, RPG::EventScriptData *scri
                 + "<voice required=\"Gender=" + (female_voice ? "fe" : "") 
                 + "male\"><rate absspeed=\"" + speed
                 + "\"><pitch middle = '" + pitch + "'/>";
-    speech_xml += scriptLine->stringParameter.s_str();
+    speech_xml += message;
     fmt::print("XML:\n{}\n", speech_xml);
     pVoice->Speak(std::wstring(speech_xml.begin(), speech_xml.end()).c_str(), SPF_ASYNC | SPF_PURGEBEFORESPEAK | SPF_IS_XML, NULL );
 
