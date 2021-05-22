@@ -36,13 +36,17 @@ void TwitchChat::login(std::string_view oauth_token, std::string_view user) {
 
 void TwitchChat::join(std::string_view channel_name) {
     assert(channel_name.find("\n") == std::string_view::npos);
-    fmt::print("Joining channel {}", channel_name);
+    fmt::print("Joining channel {}\n", channel_name);
     cs.send(fmt::format("JOIN #{}\n", channel_name));
-    std::string msg;
+    std::optional<std::string> msg;
     do {
-        msg = message_queue.pop_blocking();
-        fmt::print("{}", msg);
-    } while (msg.find("End of /NAMES list") == std::string::npos);
+        msg = message_queue.pop_with_timeout(std::chrono::seconds(1));
+        if(!msg.has_value()){
+            fmt::print("Joining failed\n");
+            throw std::runtime_error("Joining failed\n");
+        }
+        fmt::print("{}", *msg);
+    } while (msg->find("End of /NAMES list") == std::string::npos);
 }
 
 void TwitchChat::sendMessage(std::string_view channel_name, std::string_view msg) {

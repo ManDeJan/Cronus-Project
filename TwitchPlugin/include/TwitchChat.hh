@@ -16,7 +16,6 @@ public:
     void stop();
 
     void login(std::string_view oauth_token, std::string_view user);
-
     void join(std::string_view channel_name);
     void sendMessage(std::string_view channel_name, std::string_view msg);
 };
