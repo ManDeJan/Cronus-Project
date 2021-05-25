@@ -1,4 +1,5 @@
 #include "DynRPG/Character/AnimationType.hpp"
+#include "DynRPG/Character/Hero.hpp"
 #include "DynRPG/DynCore/PluginCallbacks.hpp"
 #include "DynRPG/Event/EventCommand.hpp"
 #include "DynRPG/Map/Map.hpp"
@@ -44,7 +45,7 @@ bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::
         local_speech_enabled = false;
         return false;
     } else {
-        fmt::print("tts on\n");
+        fmt::print("@tts(on)\n");
         local_speech_enabled = true;
     }
 
@@ -101,6 +102,11 @@ std::string interpolate_string(std::string in) {
             i = i + 3;
             continue;
         }
+        fmt::print("Replacing char id: {}", char_id);
+        if (not char_id) char_id++; // big brain
+        // if (char_id == 0) {
+        //     char_id = RPG::hero->id; // werkte niet for some reason
+        // }
         if (char_id < RPG::actors.count()) {
             auto name = RPG::actors.get(char_id)->getName();
             fmt::print("Replacing name {} {}\n", char_id, name);

@@ -1,3 +1,4 @@
+#include "SFML/Window/WindowStyle.hpp"
 #include <DynRPG/DynRPG.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -11,16 +12,6 @@
 #include <process.h>
 #include <sys/cdefs.h>
 
-struct TwitchActor {
-    int original_x;
-    int original_y;
-    int eventId;
-    int charName;
-};
-
-std::vector<TwitchActor> available_actors{{0, 0, 8, 1},  {2, 0, 9, 2},  {4, 0, 10, 3},
-                                          {6, 0, 11, 4}, {8, 0, 12, 5}, {10, 0, 13, 6}};
-std::vector<TwitchActor> running_actors;
 
 class RPG2K3Window : public sf::Sprite {
 public:
@@ -150,7 +141,7 @@ void onInitTitleScreen() {
 }
 
 void onInitFinished() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(620 * 2, 480 * 2), "Cronus",
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(320, 240), "Cronus",
                                                 sf::Style::Default /*sf::Style::Fullscreen*/);
     rpg = std::make_unique<RPG2K3Window>();
     const auto window_size = window->getSize();
@@ -165,37 +156,14 @@ void onInitFinished() {
     // background = std::make_unique<sf::Sprite>(*backgroundTexture);
 }
 
-void addRandomSub() {
-    if (available_actors.empty()) return;
-    auto id = rand() % available_actors.size();
-    auto actor = available_actors[id];
-    available_actors.erase(available_actors.begin() + id);
-    running_actors.push_back(actor);
-    auto event = RPG::map->events.get(actor.eventId);
-    event->x = 41;
-    event->y = 21;
-    RPG::actors.get(actor.charName)->name = "This is a test message\nMultiple lines";
-}
-
-void returnSub(int id) {
-    auto res =
-        std::find_if(running_actors.begin(), running_actors.end(), [&](TwitchActor a) { return a.eventId == id; });
-    if (res != running_actors.end()) {
-        auto event = RPG::map->events.get(id);
-        event->x = res->original_x;
-        event->y = res->original_y;
-        available_actors.push_back(*res);
-        running_actors.erase(res);
-    }
-};
 
 bool onComment(const char *text, const RPG::ParsedCommentData *parsedData, RPG::EventScriptLine *nextScriptLine,
                RPG::EventScriptData *scriptData, int eventId, int pageId, int lineId, int *nextLineId) {
-    if (strcmp(parsedData->command, "arenaloaded") == 0) {
-        addRandomSub();
-        addRandomSub();
-        return false;
-    }
-    if (strcmp(parsedData->command, "returnhome") == 0) { returnSub(eventId); }
+    // if (strcmp(parsedData->command, "arenaloaded") == 0) {
+    //     addRandomSub();
+    //     addRandomSub();
+    //     return false;
+    // }
+    // if (strcmp(parsedData->command, "returnhome") == 0) { returnSub(eventId); }
     return true;
 }
